@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ECHO-17 // ARCHIVE</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: #000;
+    color: #aaa;
+    font-family: "Courier New", monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* SCANLINES */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.025) 0px,
+        rgba(255,255,255,0.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+}
+
+/* FLICKER */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 998;
+
+    background: rgba(255,255,255,0.015);
+    animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+    0% { opacity: .15; }
+    50% { opacity: .03; }
+    100% { opacity: .12; }
+}
+
+.container {
+    width: 92%;
+    max-width: 900px;
+    margin: auto;
+    padding: 25px 0 50px;
+}
+
+/* HEADER */
+
+.header {
+    border: 1px solid #333;
+    padding: 20px;
+    margin-bottom: 25px;
+    background: #030303;
+}
+
+.status {
+    color: #555;
+    font-size: 11px;
+}
+
+.title {
+    font-size: clamp(40px, 10vw, 80px);
+    letter-spacing: 8px;
+    margin: 10px 0;
+    color: #ddd;
+
+    animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+    0%, 92%, 100% {
+        transform: translate(0);
+    }
+
+    93% {
+        transform: translate(-3px, 1px);
+    }
+
+    94% {
+        transform: translate(3px, -1px);
+    }
+
+    95% {
+        transform: translate(0);
+    }
+}
+
+.warning {
+    color: #555;
+    font-size: 11px;
+}
+
+/* TERMINAL */
+
+.terminal {
+    border: 1px solid #222;
+    background: #020202;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.line {
+    margin: 8px 0;
+}
+
+.green {
+    color: #999;
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background: #aaa;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ARQUIVOS */
+
+.file {
+    display: block;
+    width: 100%;
+
+    color: #888;
+
+    border: 1px solid #222;
+
+    padding: 15px;
+    margin: 8px 0;
+
+    background: #030303;
+
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.file:hover {
+    color: white;
+    border-color: #555;
+    background: #0a0a0a;
+}
+
+.locked {
+    color: #333;
+    cursor: not-allowed;
+}
+
+.locked:hover {
+    color: #555;
+}
+
+/* SEÇÕES */
+
+.hidden-section {
+    display: none;
+
+    margin-top: 30px;
+
+    border: 1px solid #333;
+
+    padding: 20px;
+
+    background: #020202;
+}
+
+.hidden-section h2 {
+    font-size: 24px;
+    font-weight: normal;
+    letter-spacing: 3px;
+}
+
+.back {
+    display: inline-block;
+
+    margin-bottom: 15px;
+
+    color: #555;
+
+    cursor: pointer;
+
+    font-size: 12px;
+}
+
+.back:hover {
+    color: white;
+}
+
+/* VIDEO */
+
+.video-box {
+    border: 1px solid #333;
+    background: #000;
+    padding: 4px;
+}
+
+video {
+    width: 100%;
+    display: block;
+    background: #000;
+}
+
+/* INFO */
+
+.info {
+    margin-top: 15px;
+
+    border: 1px solid #222;
+
+    padding: 15px;
+
+    font-size: 11px;
+
+    color: #555;
+
+    line-height: 1.8;
+}
+
+/* CHAVE */
+
+.key-box {
+    margin-top: 20px;
+
+    border: 1px solid #222;
+
+    padding: 15px;
+}
+
+.key-box input {
+    width: 100%;
+
+    padding: 12px;
+
+    margin-top: 10px;
+
+    background: #050505;
+
+    border: 1px solid #333;
+
+    color: #aaa;
+
+    font-family: "Courier New", monospace;
+
+    outline: none;
+}
+
+.key-box input:focus {
+    border-color: #666;
+}
+
+.key-box button {
+    margin-top: 10px;
+
+    padding: 10px 15px;
+
+    background: #080808;
+
+    border: 1px solid #333;
+
+    color: #777;
+
+    font-family: "Courier New", monospace;
+
+    cursor: pointer;
+}
+
+.key-box button:hover {
+    color: white;
+    border-color: #666;
+}
+
+.error {
+    color: #555;
+    font-size: 11px;
+    margin-top: 10px;
+}
+
+/* DOCUMENTO */
+
+.document {
+    border: 1px solid #222;
+
+    padding: 20px;
+
+    margin-top: 20px;
+
+    line-height: 1.8;
+
+    font-size: 12px;
+
+    color: #777;
+}
+
+.document-title {
+    color: #aaa;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 20px;
+}
+
+/* FOOTER */
+
+.footer {
+    margin-top: 45px;
+
+    text-align: center;
+
+    color: #333;
+
+    font-size: 10px;
+}
+
+/* GLITCH EXTRA */
+
+.glitch-text {
+    animation: textGlitch 4s infinite;
+}
+
+@keyframes textGlitch {
+    0%, 90%, 100% {
+        opacity: 1;
+    }
+
+    91% {
+        opacity: .4;
+    }
+
+    92% {
+        opacity: 1;
+    }
+
+    93% {
+        opacity: .2;
+    }
+
+    94% {
+        opacity: 1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="status">
+            SYSTEM STATUS: UNKNOWN
+        </div>
+
+        <div class="title">
+            ECHO-17
+        </div>
+
+        <div class="warning">
+            RECOVERED ARCHIVE // ACCESS NODE 017
+        </div>
+
+    </div>
+
+
+    <!-- TERMINAL -->
+
+    <div class="terminal">
+
+        <div class="line">
+            &gt; INITIALIZING CONNECTION...
+        </div>
+
+        <div class="line">
+            &gt; SEARCHING FOR ARCHIVE 017...
+        </div>
+
+        <div class="line green">
+            &gt; CONNECTION ESTABLISHED
+        </div>
+
+        <div class="line">
+            &gt; WARNING: SOME RECORDS MAY BE CORRUPTED.
+        </div>
+
+        <div class="line">
+            &gt; LAST ACCESS: UNKNOWN
+        </div>
+
+        <div class="line">
+            &gt; USER: UNKNOWN
+        </div>
+
+        <div class="line">
+            &gt; <span class="cursor"></span>
+        </div>
+
+    </div>
+
+
+    <!-- ARQUIVOS -->
+
+    <button class="file" onclick="openSection('cam01')">
+        [CAM_01] // RECOVERED RECORDING
+    </button>
+
+    <button class="file" onclick="openSection('cam02')">
+        [CAM_02] // SIGNAL LOST
+    </button>
+
+    <button class="file locked" onclick="lockedMessage()">
+        [AUDIO_017] // UNKNOWN FREQUENCY
+    </button>
+
+    <button class="file locked" onclick="lockedMessage()">
+        [DOCUMENT_01] // ACCESS RESTRICTED
+    </button>
+
+    <button class="file locked" onclick="lockedMessage()">
+        [CORRUPTED] // ACCESS DENIED
+    </button>
+
+
+    <!-- CAM 01 -->
+
+    <div id="cam01" class="hidden-section">
+
+        <span class="back" onclick="closeSections()">
+            &lt; RETURN TO ARCHIVE
+        </span>
+
+        <h2>CAM_01</h2>
+
+        <div class="status">
+            STATUS: RECOVERED
+        </div>
+
+        <div class="video-box">
+
+            <video controls preload="metadata">
+
+                <source
+                    src="lv_0_20260928040828.mp4"
+                    type="video/mp4"
+                >
+
+                Seu navegador não conseguiu carregar esta gravação.
+
+            </video>
+
+        </div>
+
+        <div class="info">
+
+            FILE: CAM_01
+            <br>
+
+            SOURCE: UNKNOWN
+            <br>
+
+            RECORDING DATE: 17/08/2017
+            <br>
+
+            STATUS: PARTIALLY RECOVERED
+
+        </div>
+
+    </div>
+
+
+    <!-- CAM 02 -->
+
+    <div id="cam02" class="hidden-section">
+
+        <span class="back" onclick="closeSections()">
+            &lt; RETURN TO ARCHIVE
+        </span>
+
+        <h2>CAM_02</h2>
+
+        <div class="status">
+            STATUS: SIGNAL LOST
+        </div>
+
+        <div class="info">
+
+            FILE: CAM_02
+            <br>
+
+            SOURCE: UNKNOWN
+            <br>
+
+            RECORDING DATE: 17/08/2017
+            <br>
+
+            STATUS: PARTIALLY RECOVERED
+
+            <br><br>
+
+            SIGNAL INTERRUPTION DETECTED
+
+            <br>
+
+            TIMESTAMP: 03:17:42
+
+            <br>
+
+            TIMESTAMP: 03:17:43
+
+            <br>
+
+            TIMESTAMP: 03:17:44
+
+            <br><br>
+
+            UNKNOWN DATA FOUND:
+
+            <br><br>
+
+            <span class="glitch-text">
+                E17-0417
+            </span>
+
+        </div>
+
+
+        <!-- CHAVE -->
+
+        <div class="key-box">
+
+            <div class="status">
+                ENTER RECOVERED ACCESS KEY:
+            </div>
+
+            <input
+                type="text"
+                id="keyInput"
+                placeholder="ACCESS KEY"
+                autocomplete="off"
+            >
+
+            <button onclick="checkKey()">
+                ACCESS
+            </button>
+
+            <div id="keyError" class="error"></div>
+
+        </div>
+
+    </div>
+
+
+    <!--
