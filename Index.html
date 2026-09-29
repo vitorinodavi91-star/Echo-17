@@ -61,4 +61,143 @@ body::after {
     width: 92%;
     max-width: 900px;
     margin: auto;
-    padding: 25px
+    padding: 25px 0 50px;
+}
+
+/* HEADER */
+
+.header {
+    border: 1px solid #333;
+    padding: 20px;
+    margin-bottom: 25px;
+    background: #030303;
+}
+
+.status {
+    color: #555;
+    font-size: 11px;
+}
+
+.title {
+    font-size: clamp(40px, 10vw, 80px);
+    letter-spacing: 8px;
+    margin: 10px 0;
+    color: #ddd;
+
+    animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+    0%, 92%, 100% {
+        transform: translate(0);
+    }
+
+    93% {
+        transform: translate(-3px, 1px);
+    }
+
+    94% {
+        transform: translate(3px, -1px);
+    }
+
+    95% {
+        transform: translate(0);
+    }
+}
+
+.warning {
+    color: #555;
+    font-size: 11px;
+}
+
+/* TERMINAL */
+
+.terminal {
+    border: 1px solid #222;
+    background: #020202;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.line {
+    margin: 8px 0;
+}
+
+.green {
+    color: #999;
+}
+
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background: #aaa;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ARQUIVOS */
+
+.file {
+    display: block;
+    width: 100%;
+
+    color: #888;
+
+    border: 1px solid #222;
+
+    padding: 15px;
+    margin: 8px 0;
+
+    background: #030303;
+
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.file:hover {
+    color: white;
+    border-color: #555;
+    background: #0a0a0a;
+}
+
+.locked {
+    color: #333;
+}
+
+.locked:hover {
+    color: #555;
+}
+
+/* SEÇÕES */
+
+.hidden-section {
+    display: none;
+
+    margin-top: 30px;
+
+    border: 1px solid #333;
+
+    padding: 20px;
+
+    background: #020202;
+}
+
+.hidden-section h2 {
+    font-size: 24px;
+    font-weight: normal;
+    letter-spacing: 3px;
+}
+
+.back
